@@ -24,7 +24,7 @@ repositories {
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     compile group: 'commons-codec', name: 'commons-codec', version: '1.11'
-
+    compile 'io.javalin:javalin:1.5.0'
 }
 
 compileKotlin {
