@@ -1,33 +1,39 @@
 package kotcoin
 
 object Blockchain {
-    val chain: MutableList<Block> = mutableListOf(createGenesisBlock())
+    val chain = mutableListOf(createGenesisBlock())
 
-    fun addNewBlock(data: Any) {
-        val block = Block(chain.size + 1, getLastBlock().hash, data)
-        chain.add(block)
+    fun mineBlock(data: Any): Block {
+        val proofOfWork = generateProofOfWork(getLatestBlock().proofOfWork)
+        val block = Block(chain.size, getLatestBlock().hash, data, proofOfWork)
+
+        addNewBlock(block)
+
+        return getLatestBlock()
     }
 
-    fun getLastBlock(): Block {
+    fun addNewBlock(block: Block) {
+        if (isNewBlockValid(block)) chain.add(block)
+    }
+
+    fun getLatestBlock(): Block {
         return chain.last()
     }
 
+    private fun generateProofOfWork(previousPow: Int, difficulty: Int = 1): Int {
+        var proof = previousPow + 1
+        val nonce = 19 * difficulty
+        while ((proof + previousPow) % nonce != 0) {
+            proof += 1
+        }
+        return proof
+    }
+
     private fun createGenesisBlock(): Block {
-        return Block(0, "0", "Genesis block")
+        return Block(0, "0", "Genesis block", 0)
     }
-}
 
-fun main(args: Array<String>) {
-    val kotcoin = Blockchain
+    private fun isNewBlockValid(newBlock: Block): Boolean =
+            ((newBlock.index == getLatestBlock().index + 1) || (newBlock.previousHash == getLatestBlock().hash))
 
-    for (i in 1..15) {
-        kotcoin.addNewBlock("Block $i")
-    }
-    
-    for (block in kotcoin.chain) {
-        println("""Data: ${block.data}
-            |Previous hash: ${block.previousHash}
-            |Current hash: ${block.hash}
-        |""".trimMargin())
-    }
 }
