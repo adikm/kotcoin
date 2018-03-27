@@ -1,17 +1,16 @@
 package kotcoin
 
 import io.javalin.Javalin
-import java.util.*
 
 val kotcoin = Blockchain
 
 fun main(args: Array<String>) {
     val app = Javalin.start(7000)
-    app.get("/chain") { ctx ->
+    app.get("/blocks") { ctx ->
         ctx.json(kotcoin.chain)
-    }.post("/mine") { ctx ->
-        val minedBlock = kotcoin.mineBlock(UUID.randomUUID())
+    }
+    app.post("/blocks/mine") { ctx ->
+        val minedBlock = kotcoin.mineBlock(ctx.body())
         ctx.json(minedBlock)
     }
-
 }
