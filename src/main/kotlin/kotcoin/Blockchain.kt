@@ -12,12 +12,12 @@ object Blockchain {
         return getLatestBlock()
     }
 
-    fun addNewBlock(block: Block) {
-        if (isNewBlockValid(block)) chain.add(block)
-    }
-
     fun getLatestBlock(): Block {
         return chain.last()
+    }
+
+    private fun addNewBlock(block: Block) {
+        if (isNewBlockValid(block)) chain.add(block)
     }
 
     private fun generateProofOfWork(previousPow: Int, difficulty: Int = 1): Int {
