@@ -8,7 +8,7 @@ internal class BlockchainTest {
     @Test
     fun `Get latest block, chain just initialized, returns genesis block`() {
         val chain = Blockchain
-        val latestBlock = chain.getLatestBlock()
+        val latestBlock = chain.latestBlock
 
         assertEquals(0, latestBlock.index)
         assertEquals("Genesis block", latestBlock.data)
@@ -21,13 +21,13 @@ internal class BlockchainTest {
 
         val minedBlock = chain.mineBlock("data")
 
-        assertEquals(minedBlock, chain.getLatestBlock())
+        assertEquals(minedBlock, chain.latestBlock)
     }
 
     @Test
     fun `Mine block, assert created values`() {
         val chain = Blockchain
-        val genesisBlock = chain.getLatestBlock()
+        val genesisBlock = chain.latestBlock
 
         val minedBlock = chain.mineBlock("data")
 

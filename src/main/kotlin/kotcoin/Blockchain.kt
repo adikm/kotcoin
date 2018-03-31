@@ -1,19 +1,21 @@
 package kotcoin
 
 object Blockchain {
-    val chain = mutableListOf(createGenesisBlock())
+    val chain = mutableListOf<Block>()
+    val latestBlock: Block
+        get() = chain.last()
+
+    init {
+        chain.add(Block(0, "0", "Genesis block", 0))
+    }
 
     fun mineBlock(data: Any): Block {
-        val proofOfWork = generateProofOfWork(getLatestBlock().proofOfWork)
-        val block = Block(chain.size, getLatestBlock().hash, data, proofOfWork)
+        val proofOfWork = generateProofOfWork(latestBlock.proofOfWork)
+        val block = Block(chain.size, latestBlock.hash, data, proofOfWork)
 
         addNewBlock(block)
 
-        return getLatestBlock()
-    }
-
-    fun getLatestBlock(): Block {
-        return chain.last()
+        return latestBlock
     }
 
     private fun addNewBlock(block: Block) {
@@ -29,11 +31,7 @@ object Blockchain {
         return proof
     }
 
-    private fun createGenesisBlock(): Block {
-        return Block(0, "0", "Genesis block", 0)
-    }
-
     private fun isNewBlockValid(newBlock: Block): Boolean =
-            ((newBlock.index == getLatestBlock().index + 1) || (newBlock.previousHash == getLatestBlock().hash))
+            ((newBlock.index == latestBlock.index + 1) || (newBlock.previousHash == latestBlock.hash))
 
 }
